@@ -15,34 +15,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { computed, ref } from 'vue'
 const props = defineProps({
   type: String,
   placeholder: String,
   autocomplete: String,
-  modelValue: { type: String, default: null },
-  minlength: { type: Number, default: 3 },
+  modelValue: { type: String, default: '' },
+  minlength: { type: Number, default: 0 },
+  pattern: { type: String, default: '' },
+  passwordError: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['update:modelValue'])
 
-const hasError = ref(false)
+const isTouched = ref(false)
 
-const errorMessage = computed(() =>
-  hasError.value ? `Must be at least ${props.minlength} characters` : '',
-)
+const isTooShort = computed(() => {
+  if (!isTouched.value || !props.minlength) return false
+  return props.modelValue.length < props.minlength
+})
+
+const isInvalidPattern = computed(() => {
+  if (!isTouched.value || !props.pattern) return false
+  return !new RegExp(props.pattern).test(props.modelValue)
+})
+
+const hasError = computed(() => isTooShort.value || isInvalidPattern.value || props.passwordError)
+
+const errorMessage = computed(() => {
+  if (isTooShort.value) return `Must be at least ${props.minlength} characters`
+  if (isInvalidPattern.value) return 'Invalid format'
+  if (props.passwordError) return "Passwords don't match"
+  return ''
+})
 
 const handleInput = (event: Event) => {
+  if (!isTouched.value) isTouched.value = true
   const target = event.target as HTMLInputElement
   emit('update:modelValue', target.value)
 }
-
-watch(
-  () => props.modelValue,
-  (newValue) => {
-    hasError.value = newValue.length < props.minlength
-  },
-)
 </script>
 
 <style scoped>
