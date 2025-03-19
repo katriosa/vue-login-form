@@ -1,11 +1,4 @@
-interface FormData {
-  name: string
-  firstname: string
-  email: string
-  phone: string
-  password: string
-  confirmPassword: string
-}
+import type { FormData } from '../types/FormData'
 
 export const mockApiRequest = {
   async submitForm(data: FormData) {

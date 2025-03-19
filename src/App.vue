@@ -2,7 +2,7 @@
   <div>
     <div v-if="signUpResult !== null" class="message-container card">
       <p class="message">{{ signUpResult.message }}</p>
-      <button @click="signUpResult = null">Back</button>
+      <button @click="handleGoBack">Go Back</button>
     </div>
     <form v-else class="form-container card" @submit.prevent="handleSubmit">
       <div class="form-title">
@@ -13,42 +13,43 @@
         v-model="form.name"
         type="text"
         placeholder="Your name"
-        :minlength="3"
         autocomplete="given-name"
+        :errorMessage="errorMessage?.name"
       />
       <InputField
         v-model="form.firstname"
         type="text"
         placeholder="Your firstname"
-        :minlength="3"
         autocomplete="family-name"
+        :errorMessage="errorMessage?.firstname"
       />
       <InputField
         v-model="form.email"
         type="email"
         placeholder="Your email"
-        pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
         autocomplete="email"
+        :errorMessage="errorMessage?.email"
       />
       <InputField
         v-model="form.phone"
         type="tel"
         placeholder="Your phone"
-        pattern="^\+?\d+$"
         autocomplete="tel"
+        :errorMessage="errorMessage?.phone"
       />
       <InputField
         v-model="form.password"
         type="password"
         placeholder="Your password"
         autocomplete="new-password"
-        :minlength="6"
+        :errorMessage="errorMessage?.password"
       />
       <InputField
         v-model="form.confirmPassword"
         type="password"
         placeholder="Confirm your password"
         autocomplete="new-password"
+        :errorMessage="errorMessage?.confirmPassword"
       />
       <div class="button-container">
         <button type="submit" :disabled="isSubmitting">
@@ -62,6 +63,7 @@
 <script setup lang="ts">
 import InputField from '@/components/InputField.vue'
 import { mockApiRequest } from '@/services/mockApiRequest.ts'
+import { useFormValidation } from '@/utils/useFormValidation'
 import { reactive, ref } from 'vue'
 
 const form = reactive({
@@ -72,11 +74,22 @@ const form = reactive({
   password: '',
   confirmPassword: '',
 })
-
 const isSubmitting = ref(false)
 const signUpResult = ref<{ success: boolean; message: string } | null>(null)
+const errorMessage = ref<{ [key: string]: string } | null>(null)
+
+const handleGoBack = () => {
+  signUpResult.value = null
+  errorMessage.value = null
+}
 
 const handleSubmit = async () => {
+  const errors = useFormValidation(form)
+  if (errors) {
+    errorMessage.value = errors
+    return
+  }
+
   isSubmitting.value = true
   try {
     const signUpResponse = await mockApiRequest.submitForm(form)
@@ -126,13 +139,14 @@ const handleSubmit = async () => {
 
 .button-container {
   margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 @media (max-width: 768px) {
   .form-container {
     width: 80cqi;
     max-width: none;
-    gap: 20px;
+    gap: 30px;
   }
 }
 </style>

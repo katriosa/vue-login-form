@@ -4,53 +4,27 @@
       class="input"
       :type="type"
       :placeholder="placeholder"
-      :minlength="minlength"
       :autocomplete="autocomplete"
       :value="modelValue"
       @input="handleInput"
       required
     />
-    <p v-show="hasError" class="error-text">{{ errorMessage }}</p>
+    <p v-show="errorMessage" class="error-text">{{ errorMessage }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-const props = defineProps({
+defineProps({
   type: String,
   placeholder: String,
   autocomplete: String,
   modelValue: { type: String, default: '' },
-  minlength: { type: Number, default: 0 },
-  pattern: { type: String, default: '' },
-  passwordError: { type: Boolean, default: false },
+  errorMessage: String,
 })
 
 const emit = defineEmits(['update:modelValue'])
 
-const isTouched = ref(false)
-
-const isTooShort = computed(() => {
-  if (!isTouched.value || !props.minlength) return false
-  return props.modelValue.length < props.minlength
-})
-
-const isInvalidPattern = computed(() => {
-  if (!isTouched.value || !props.pattern) return false
-  return !new RegExp(props.pattern).test(props.modelValue)
-})
-
-const hasError = computed(() => isTooShort.value || isInvalidPattern.value || props.passwordError)
-
-const errorMessage = computed(() => {
-  if (isTooShort.value) return `Must be at least ${props.minlength} characters`
-  if (isInvalidPattern.value) return 'Invalid format'
-  if (props.passwordError) return "Passwords don't match"
-  return ''
-})
-
 const handleInput = (event: Event) => {
-  if (!isTouched.value) isTouched.value = true
   const target = event.target as HTMLInputElement
   emit('update:modelValue', target.value)
 }
@@ -63,6 +37,7 @@ const handleInput = (event: Event) => {
   width: 100%;
   min-width: 200px;
   max-width: 400px;
+  position: relative;
 }
 .input {
   background-color: var(--color-input);
@@ -75,6 +50,9 @@ const handleInput = (event: Event) => {
 }
 
 .error-text {
+  position: absolute;
+  top: 100%;
+  left: 0;
   margin-top: 5px;
   color: var(--color-error);
   text-shadow: var(--color-text-shadow);
@@ -83,6 +61,9 @@ const handleInput = (event: Event) => {
 @media (max-width: 768px) {
   .input-container {
     max-width: 80%;
+  }
+  .input {
+    padding: 8px 10px;
   }
 }
 </style>
