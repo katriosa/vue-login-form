@@ -111,8 +111,7 @@ const handleSubmit = async () => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 60cqi;
-  max-width: 600px;
+  width: min(600px, 90vw);
   gap: 40px;
 }
 .form-container {
@@ -143,10 +142,13 @@ const handleSubmit = async () => {
 }
 
 @media (max-width: 768px) {
-  .form-container {
-    width: 80cqi;
+  .card {
+    width: min(450px, 95vw);
     max-width: none;
     gap: 30px;
+  }
+  .form-container {
+    padding: 20px;
   }
 }
 </style>
