@@ -1,4 +1,4 @@
-import type { FormData } from '../types/FormData'
+import type { FormData } from '../types/FormTypes'
 
 export const mockApiRequest = {
   async submitForm(data: FormData) {

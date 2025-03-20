@@ -1,4 +1,4 @@
-import type { FormData } from '../types/FormData'
+import type { FormData } from '../types/FormTypes'
 
 export const useFormValidation = (data: FormData) => {
   const errors: { [key: string]: string } = {}

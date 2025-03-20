@@ -4,52 +4,19 @@
       <p class="message">{{ signUpResult.message }}</p>
       <button @click="handleGoBack">Go Back</button>
     </div>
-    <form v-else class="form-container card" @submit.prevent="handleSubmit">
+    <form v-else class="card" @submit.prevent="handleSubmit">
       <div class="form-title">
         <h1 class="form-heading">Sign Up</h1>
         <p>Please fill in this form to create an account.</p>
       </div>
       <InputField
-        v-model="form.name"
-        type="text"
-        placeholder="Your name"
-        autocomplete="given-name"
-        :errorMessage="errorMessage?.name"
-      />
-      <InputField
-        v-model="form.firstname"
-        type="text"
-        placeholder="Your firstname"
-        autocomplete="family-name"
-        :errorMessage="errorMessage?.firstname"
-      />
-      <InputField
-        v-model="form.email"
-        type="email"
-        placeholder="Your email"
-        autocomplete="email"
-        :errorMessage="errorMessage?.email"
-      />
-      <InputField
-        v-model="form.phone"
-        type="tel"
-        placeholder="Your phone"
-        autocomplete="tel"
-        :errorMessage="errorMessage?.phone"
-      />
-      <InputField
-        v-model="form.password"
-        type="password"
-        placeholder="Your password"
-        autocomplete="new-password"
-        :errorMessage="errorMessage?.password"
-      />
-      <InputField
-        v-model="form.confirmPassword"
-        type="password"
-        placeholder="Confirm your password"
-        autocomplete="new-password"
-        :errorMessage="errorMessage?.confirmPassword"
+        v-for="field in formFields"
+        :key="field.name"
+        v-model="form[field.name]"
+        :type="field.type"
+        :placeholder="field.placeholder"
+        :autocomplete="field.autocomplete"
+        :errorMessage="errorMessage?.[field.name]"
       />
       <div class="button-container">
         <button type="submit" :disabled="isSubmitting">
@@ -65,8 +32,28 @@ import InputField from '@/components/InputField.vue'
 import { mockApiRequest } from '@/services/mockApiRequest.ts'
 import { useFormValidation } from '@/utils/useFormValidation'
 import { reactive, ref } from 'vue'
+import type { FormData, FormField } from '@/types/FormTypes'
 
-const form = reactive({
+const formFields: FormField[] = [
+  { name: 'name', type: 'text', placeholder: 'Your name', autocomplete: 'given-name' },
+  { name: 'firstname', type: 'text', placeholder: 'Your firstname', autocomplete: 'family-name' },
+  { name: 'email', type: 'email', placeholder: 'Your email', autocomplete: 'email' },
+  { name: 'phone', type: 'tel', placeholder: 'Your phone', autocomplete: 'tel' },
+  {
+    name: 'password',
+    type: 'password',
+    placeholder: 'Your password',
+    autocomplete: 'new-password',
+  },
+  {
+    name: 'confirmPassword',
+    type: 'password',
+    placeholder: 'Confirm your password',
+    autocomplete: 'new-password',
+  },
+]
+
+const form = reactive<FormData>({
   name: '',
   firstname: '',
   email: '',
@@ -74,6 +61,7 @@ const form = reactive({
   password: '',
   confirmPassword: '',
 })
+
 const isSubmitting = ref(false)
 const signUpResult = ref<{ success: boolean; message: string } | null>(null)
 const errorMessage = ref<{ [key: string]: string } | null>(null)
@@ -89,7 +77,7 @@ const handleSubmit = async () => {
     errorMessage.value = errors
     return
   }
-
+  errorMessage.value = null
   isSubmitting.value = true
   try {
     const signUpResponse = await mockApiRequest.submitForm(form)
@@ -111,15 +99,14 @@ const handleSubmit = async () => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: min(600px, 90vw);
+  width: 90vw;
+  max-width: 600px;
   gap: 40px;
-}
-.form-container {
   padding: 20px 50px;
 }
 
-.message-container {
-  padding: 30px;
+.message-container.card {
+  padding: 30px 50px;
 }
 
 .message {
@@ -143,11 +130,8 @@ const handleSubmit = async () => {
 
 @media (max-width: 768px) {
   .card {
-    width: min(450px, 95vw);
-    max-width: none;
+    max-width: 450px;
     gap: 30px;
-  }
-  .form-container {
     padding: 20px;
   }
 }
