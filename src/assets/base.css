@@ -40,7 +40,7 @@ body {
     'Droid Sans',
     'Helvetica Neue',
     sans-serif;
-  font-size: clamp(12px, 2vw, 16px);
+  font-size: clamp(12px, 2vw, 14px);
   line-height: clamp(1.4, 2vw, 1.6);
 
   text-rendering: optimizeLegibility;
