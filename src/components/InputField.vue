@@ -43,10 +43,9 @@ const handleInput = (event: Event) => {
   background-color: var(--color-input);
   outline: none;
   border: none;
-  padding: 12px 20px;
+  padding: 10px 20px;
   border-radius: 5px;
   width: 100%;
-  font-size: inherit;
 }
 
 .error-text {
