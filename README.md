@@ -1,19 +1,11 @@
-# vue-login-page
+# vue-signup
 
-This template should help get you started developing with Vue 3 in Vite.
+Tech Stack: Vue 3 + TS
 
-## Recommended IDE Setup
+Deploy: [https://katriosa.github.io/vue-signup/](https://katriosa.github.io/vue-signup/)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
 
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
+![Снимок экрана 2025-03-19 231030](https://github.com/user-attachments/assets/a6d5513b-05a0-4954-b2b2-38304fec3641)
 ## Project Setup
 
 ```sh
