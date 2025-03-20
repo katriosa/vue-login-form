@@ -1,5 +1,6 @@
 {
   "name": "vue-login-page",
+  "homepage": "https://katriosa.github.io/vue-signup/",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,9 +11,12 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "gh-pages": "^6.3.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {
